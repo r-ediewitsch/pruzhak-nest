@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model Artist {
+  id           String           @id @default(uuid())
+  name         String
+  description  String?          @db.Text
+  concerts     ArtistLineup[]
+  createdAt    DateTime         @default(now())
+}
+
+model Music {
+  id           String           @id @default(uuid())
+  title        String
+  composer     String
+  concerts     MusicLineup[]
+  createdAt    DateTime         @default(now())
+}
+
+model Concert {
+  id            String          @id @default(uuid())
+  title         String
+  musics        MusicLineup[]
+  artists       ArtistLineup[]
+  description   String?         @db.Text
+  date          DateTime
+  createdAt     DateTime        @default(now())
+}
+
+model MusicLineup {
+  id           String           @id @default(uuid())
+  music        Music            @relation(fields: [musicId], references: [id], onDelete: Cascade)
+  musicId      String
+  concert      Concert          @relation(fields: [concertId], references: [id], onDelete: Cascade)
+  concertId    String
+  playOrder    Int
+
+  @@unique([concertId, musicId, playOrder])
+}
+
+model ArtistLineup {
+  id           String           @id @default(uuid())
+  artist       Artist           @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artistId     String
+  concert      Concert          @relation(fields: [concertId], references: [id], onDelete: Cascade)
+  concertId    String
+  role         String
+
+  @@unique([concertId, artistId, role])
+}
