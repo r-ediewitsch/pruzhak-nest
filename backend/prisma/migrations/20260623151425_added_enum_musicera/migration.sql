@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "MusicEra" AS ENUM ('BAROQUE', 'CLASSICAL', 'ROMANTIC', 'MODERN', 'CONTEMPORARY');
+
+-- AlterTable
+ALTER TABLE "Music" ADD COLUMN     "era" "MusicEra" NOT NULL DEFAULT 'CLASSICAL';
